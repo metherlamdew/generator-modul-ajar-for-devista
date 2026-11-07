@@ -11,7 +11,10 @@
 @media(prefers-color-scheme:dark){:root{--bg:#0f1626;--card:#172036;--tx:#e6ebf6;--mu:#94a0bb;--bd:#2a3654;--red:#ff6b72;--onr:#1d0a0c;--paper:#1c2640;--line:#263250}}
 *{box-sizing:border-box}
 body{margin:0;font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx)}
-header{max-width:1240px;margin:auto;padding:28px 20px 6px}
+header{max-width:1240px;margin:auto;padding:28px 20px 6px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.stamp{display:inline-block;border:3px solid var(--red);color:var(--red);padding:8px 18px;font:800 22px/1 Georgia,"Times New Roman",serif;letter-spacing:.14em;border-radius:6px;transform:rotate(-3deg);white-space:nowrap}
+.stamp.big{font-size:32px;padding:12px 28px}
+footer{max-width:1240px;margin:0 auto;padding:6px 20px 48px;text-align:center}
 h1{margin:0 0 4px;font:700 28px/1.2 Georgia,"Times New Roman",serif}
 header p{margin:0;color:var(--mu);max-width:70ch}
 main{max-width:1240px;margin:auto;padding:14px 20px 48px;display:grid;grid-template-columns:minmax(0,430px) minmax(0,1fr);gap:18px;align-items:start}
@@ -49,13 +52,16 @@ button:hover{border-color:var(--red)}
 .empty{color:var(--mu);font-family:system-ui,sans-serif;font-size:15px}
 .err{color:var(--red);font-family:system-ui,sans-serif}
 @page{margin:0}
-@media print{body{background:#fff}header,#f,#tabs,#bar,.np{display:none!important}main{display:block;padding:0}.card{border:0;padding:0;background:#fff}#out{border:0;border-radius:0;padding:16mm;color:#000;background:#fff;-webkit-box-decoration-break:clone;box-decoration-break:clone}}
+@media print{body{background:#fff}header,footer,#f,#tabs,#bar,.np{display:none!important}main{display:block;padding:0}.card{border:0;padding:0;background:#fff}#out{border:0;border-radius:0;padding:16mm;color:#000;background:#fff;-webkit-box-decoration-break:clone;box-decoration-break:clone}}
 </style>
 </head>
 <body>
 <header>
+<div>
 <h1>Generator modul ajar</h1>
 <p>Isi konteks kelas, pilih model pembelajaran, lalu minta satu atau beberapa model AI menyusun modul ajarnya. Hasilnya bisa dibandingkan, diedit, dan diunduh ke Word.</p>
+</div>
+<div class="stamp" role="img" aria-label="Made by Radit">MADE BY RADIT</div>
 </header>
 <main>
 <section class="card np" id="f">
@@ -103,6 +109,7 @@ button:hover{border-color:var(--red)}
 <div id="out"><p class="empty">Hasil modul ajar akan tampil di sini. Mode template tidak memerlukan kunci API, cocok untuk mencoba alurnya dulu.</p></div>
 </section>
 </main>
+<footer><div class="stamp big" role="img" aria-label="Made by Radit">MADE BY RADIT</div></footer>
 
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
