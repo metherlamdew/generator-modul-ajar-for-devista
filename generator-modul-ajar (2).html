@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Generator Modul Ajar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js" onload="try{if(act&&!editing)draw()}catch(e){}"></script>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--tx:#17233b;--mu:#5d6882;--bd:#d5dbe7;--red:#c4262e;--onr:#fff;--paper:#fff;--line:#e3e8f2}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1626;--card:#172036;--tx:#e6ebf6;--mu:#94a0bb;--bd:#2a3654;--red:#ff6b72;--onr:#1d0a0c;--paper:#1c2640;--line:#263250}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx)}
+header{max-width:1240px;margin:auto;padding:28px 20px 6px}
+h1{margin:0 0 4px;font:700 28px/1.2 Georgia,"Times New Roman",serif}
+header p{margin:0;color:var(--mu);max-width:70ch}
+main{max-width:1240px;margin:auto;padding:14px 20px 48px;display:grid;grid-template-columns:minmax(0,430px) minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:920px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:18px}
+h2{font:700 16px Georgia,serif;margin:22px 0 6px;padding-bottom:4px;border-bottom:2px solid var(--red)}
+h2:first-child{margin-top:0}
+label{display:block;font-size:13px;color:var(--mu);margin:9px 0 3px}
+input,select,textarea{width:100%;font:inherit;color:inherit;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:8px 10px}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--red);outline-offset:1px}
+textarea{resize:vertical}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;color:var(--tx);margin:5px 0;cursor:pointer}
+.chk input{width:auto;margin-top:3px}
+.eng{border:1px solid var(--bd);border-radius:8px;padding:8px 10px;margin:8px 0}
+.eng .chk{margin:0 0 6px}
+.eng .r{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.hint{font-size:12.5px;color:var(--mu);margin:6px 0}
+button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:7px 12px}
+button:hover{border-color:var(--red)}
+.go{width:100%;margin-top:16px;padding:11px;background:var(--red);color:var(--onr);border-color:var(--red);font-weight:700}
+.go:disabled{opacity:.6;cursor:wait}
+#tabs,#bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+#tabs button[aria-selected=true]{background:var(--tx);color:var(--card);border-color:var(--tx)}
+.st{font-size:12px;opacity:.75;margin-left:4px}
+#out{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:4px;padding:26px 30px;min-height:240px;font:16px/1.7 Georgia,"Times New Roman",serif;overflow-x:auto}
+#out h1{font-size:24px;margin:0 0 12px}#out h2{font-size:19px;border:0;margin:24px 0 6px;padding:0}#out h3{font-size:16.5px;margin:18px 0 4px}#out h4{margin:14px 0 2px}
+#out table{border-collapse:collapse;width:100%;margin:10px 0;font:14px/1.5 system-ui,sans-serif}
+#out th,#out td{border:1px solid var(--bd);padding:6px 9px;text-align:left;vertical-align:top}
+#out th{background:var(--bg)}
+#out p{margin:8px 0}#out ul,#out ol{margin:6px 0;padding-left:24px}#out code{font-size:.9em;background:var(--bg);padding:1px 4px;border-radius:3px}
+#out hr{border:0;border-top:1px solid var(--bd);margin:18px 0}
+#ed{min-height:420px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+#out .katex-display{margin:10px 0;overflow-x:auto;overflow-y:hidden}
+.empty{color:var(--mu);font-family:system-ui,sans-serif;font-size:15px}
+.err{color:var(--red);font-family:system-ui,sans-serif}
+@page{margin:0}
+@media print{body{background:#fff}header,#f,#tabs,#bar,.np{display:none!important}main{display:block;padding:0}.card{border:0;padding:0;background:#fff}#out{border:0;border-radius:0;padding:16mm;color:#000;background:#fff;-webkit-box-decoration-break:clone;box-decoration-break:clone}}
+</style>
+</head>
+<body>
+<header>
+<h1>Generator modul ajar</h1>
+<p>Isi konteks kelas, pilih model pembelajaran, lalu minta satu atau beberapa model AI menyusun modul ajarnya. Hasilnya bisa dibandingkan, diedit, dan diunduh ke Word.</p>
+</header>
+<main>
+<section class="card np" id="f">
+<h2>Konteks pembelajaran</h2>
+<div class="g">
+<div><label for="jenjang">Jenjang</label><select id="jenjang"></select></div>
+<div><label for="kelas">Kelas</label><select id="kelas"></select></div>
+</div>
+<p class="hint">Fase kurikulum: <b id="fase"></b></p>
+<label for="mapel">Mata pelajaran</label><input id="mapel" placeholder="Contoh: Matematika">
+<label for="topik">Materi / topik</label><input id="topik" placeholder="Contoh: Persamaan linear satu variabel">
+<div class="g">
+<div><label for="pert">Jumlah pertemuan</label><input id="pert" type="number" min="1" max="12" value="2"></div>
+<div><label for="dur">Menit per pertemuan</label><input id="dur" type="number" min="10" value="80"></div>
+<div><label for="siswa">Jumlah peserta didik</label><input id="siswa" type="number" min="1" placeholder="32"></div>
+<div><label for="detail">Tingkat detail</label><select id="detail"><option>Ringkas</option><option selected>Standar</option><option>Sangat lengkap</option></select></div>
+</div>
+<label for="kond">Kondisi kelas (opsional)</label><textarea id="kond" rows="2" placeholder="Contoh: sebagian siswa belum lancar membaca soal cerita; proyektor tersedia, internet terbatas"></textarea>
+<div class="g">
+<div><label for="guru">Nama penyusun</label><input id="guru"></div>
+<div><label for="sek">Satuan pendidikan</label><input id="sek"></div>
+</div>
+
+<h2>Pendekatan</h2>
+<label for="kur">Kurikulum</label>
+<select id="kur"><option>Kurikulum Merdeka</option><option>Kurikulum Merdeka dengan pendekatan Pembelajaran Mendalam (mindful, meaningful, joyful)</option><option>Kurikulum 2013</option></select>
+<label for="model">Model pembelajaran</label><select id="model"></select>
+<p class="hint" id="syn"></p>
+<label>Dimensi profil lulusan yang diutamakan</label><div id="profil"></div>
+<label for="cat">Catatan tambahan (opsional)</label><textarea id="cat" rows="2" placeholder="Contoh: sisipkan permainan, gunakan konteks pasar tradisional, sertakan nilai kearifan lokal Sulawesi Selatan"></textarea>
+
+<h2>Komponen modul</h2><div id="komp"></div>
+
+<h2>Mesin AI</h2>
+<p class="hint">Centang satu atau lebih untuk membandingkan hasilnya. Kunci API dikirim langsung dari browser Anda ke penyedia, tidak lewat server lain.</p>
+<div id="eng"></div>
+<label class="chk"><input type="checkbox" id="rem"> Ingat kunci dan pengaturan di browser ini</label>
+<p class="hint">Kunci API: aistudio.google.com/apikey, platform.openai.com, console.anthropic.com, openrouter.ai</p>
+<button class="go" id="go">Buat modul ajar</button>
+</section>
+
+<section class="card" id="res">
+<div id="tabs" role="tablist"></div>
+<div id="bar" class="np"></div>
+<div id="out"><p class="empty">Hasil modul ajar akan tampil di sini. Mode template tidak memerlukan kunci API, cocok untuk mencoba alurnya dulu.</p></div>
+</section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const KELAS={"PAUD/TK":["TK A","TK B"],SD:[1,2,3,4,5,6],SMP:[7,8,9],SMA:[10,11,12],SMK:[10,11,12]};
+const fase=(j,k)=>{k=+k;if(j==="PAUD/TK")return"Fondasi";if(j==="SD")return k<=2?"A":k<=4?"B":"C";if(j==="SMP")return"D";return k===10?"E":"F"};
+const SYN={
+"Problem Based Learning (PBL)":["Orientasi peserta didik pada masalah","Mengorganisasikan peserta didik untuk belajar","Membimbing penyelidikan individu/kelompok","Mengembangkan dan menyajikan hasil karya","Menganalisis dan mengevaluasi proses pemecahan masalah"],
+"Project Based Learning (PjBL)":["Penentuan pertanyaan mendasar","Mendesain perencanaan proyek","Menyusun jadwal","Memonitor kemajuan proyek","Menguji hasil","Mengevaluasi pengalaman"],
+"Discovery Learning":["Stimulation (pemberian rangsangan)","Problem statement","Data collection","Data processing","Verification","Generalization"],
+"Inquiry Learning":["Orientasi","Merumuskan masalah","Merumuskan hipotesis","Mengumpulkan data","Menguji hipotesis","Merumuskan kesimpulan"],
+"Cooperative Learning: Jigsaw":["Pembentukan kelompok asal","Pembagian sub-materi","Diskusi kelompok ahli","Kembali ke kelompok asal dan saling mengajar","Kuis dan penghargaan"],
+"Cooperative Learning: TGT":["Penyajian kelas","Belajar dalam tim","Turnamen permainan akademik","Rekognisi tim"],
+"Cooperative Learning: STAD":["Penyajian kelas","Belajar dalam tim","Kuis individu","Skor perkembangan dan penghargaan tim"],
+"Direct Instruction":["Orientasi","Presentasi atau demonstrasi","Latihan terbimbing","Umpan balik","Latihan mandiri"],
+"Contextual Teaching and Learning (CTL)":["Konstruktivisme","Inkuiri","Bertanya","Masyarakat belajar","Pemodelan","Refleksi","Penilaian autentik"],
+"Flipped Classroom":["Belajar mandiri sebelum kelas","Klarifikasi konsep","Aktivitas penerapan di kelas","Evaluasi dan refleksi"],
+"Teaching at the Right Level (TaRL)":["Asesmen awal","Pengelompokan berdasarkan capaian","Pembelajaran sesuai tingkat capaian","Asesmen berkala"]};
+const PROFIL=["Keimanan dan ketakwaan kepada Tuhan YME","Kewargaan","Penalaran kritis","Kreativitas","Kolaborasi","Kemandirian","Kesehatan","Komunikasi"];
+const KOMP=[["tp","Tujuan pembelajaran",1],["pb","Pemahaman bermakna dan pertanyaan pemantik",1],["kk","Kegiatan pembelajaran (pendahuluan, inti, penutup)",1],["asd","Asesmen diagnostik",1],["asf","Asesmen formatif",1],["ass","Asesmen sumatif",1],["dif","Diferensiasi pembelajaran",1],["med","Media, alat, dan sumber belajar",1],["rub","Rubrik penilaian",1],["ref","Refleksi guru dan peserta didik",1],["lkpd","LKPD (lembar kerja peserta didik)",0],["pr","Pengayaan dan remedial",0],["bm","Ringkasan materi untuk guru",0],["sol","Contoh soal dan kunci jawaban",0]];
+const PROV={
+gemini:{n:"Google Gemini",m:"gemini-3.5-flash"},
+openai:{n:"OpenAI",m:"gpt-4o-mini"},
+claude:{n:"Anthropic Claude",m:"claude-sonnet-5-5"},
+openrouter:{n:"OpenRouter (DeepSeek, Llama, dll.)",m:"deepseek/deepseek-chat"}};
+
+/* ---------- UI setup ---------- */
+$("#jenjang").innerHTML=Object.keys(KELAS).map(j=>`<option>${j}</option>`).join("");
+$("#model").innerHTML=Object.keys(SYN).map(m=>`<option>${m}</option>`).join("");
+$("#profil").innerHTML=PROFIL.map((p,i)=>`<label class="chk"><input type="checkbox" name="profil" value="${p}" ${i==2||i==4?"checked":""}> ${p}</label>`).join("");
+$("#komp").innerHTML=KOMP.map(k=>`<label class="chk"><input type="checkbox" name="komp" value="${k[0]}" ${k[2]?"checked":""}> ${k[1]}</label>`).join("");
+$("#eng").innerHTML=Object.entries(PROV).map(([id,p])=>`<div class="eng"><label class="chk"><input type="checkbox" name="eng" value="${id}" ${id=="gemini"?"checked":""}><b>${p.n}</b></label><div class="r"><input id="m_${id}" value="${p.m}" aria-label="Nama model ${p.n}"><input id="k_${id}" type="password" placeholder="Kunci API" autocomplete="off" aria-label="Kunci API ${p.n}"></div></div>`).join("")+`<div class="eng"><label class="chk"><input type="checkbox" name="eng" value="tpl"><b>Template tanpa AI</b> (tanpa kunci API, kerangka siap isi)</label></div>`;
+function upKelas(){const j=$("#jenjang").value;$("#kelas").innerHTML=KELAS[j].map(k=>`<option>${k}</option>`).join("");upFase()}
+function upFase(){$("#fase").textContent=fase($("#jenjang").value,String($("#kelas").value).replace(/\D/g,"")||1)}
+function upSyn(){$("#syn").textContent="Sintaks: "+SYN[$("#model").value].join(" → ")}
+$("#jenjang").onchange=upKelas;$("#kelas").onchange=upFase;$("#model").onchange=upSyn;upKelas();upSyn();
+try{const s=JSON.parse(localStorage.getItem("mag")||"null");if(s){$("#rem").checked=true;for(const id in PROV){if(s[id]){$("#k_"+id).value=s[id].k||"";$("#m_"+id).value=s[id].m||PROV[id].m}}}}catch(e){}
+
+/* ---------- Data & prompt ---------- */
+function data(){const g=i=>$("#"+i).value.trim();return{mapel:g("mapel"),topik:g("topik"),jenjang:g("jenjang"),kelas:g("kelas"),fase:$("#fase").textContent,kur:g("kur"),model:g("model"),pert:Math.max(1,+g("pert")||1),dur:g("dur")||"40",siswa:g("siswa"),kond:g("kond"),guru:g("guru"),sek:g("sek"),detail:g("detail"),cat:g("cat"),profil:$$("[name=profil]:checked").map(x=>x.value),komp:$$("[name=komp]:checked").map(x=>x.value)}}
+function buildPrompt(d){
+const names=Object.fromEntries(KOMP.map(k=>[k[0],k[1]]));
+const sys="Anda adalah pakar kurikulum dan perancang pembelajaran di Indonesia yang berpengalaman membantu guru menyusun modul ajar. Tulis dalam Bahasa Indonesia baku yang praktis dipakai guru. Keluarkan hanya isi modul dalam format Markdown (judul dengan #, tabel Markdown untuk identitas modul dan rubrik). Jangan menulis kalimat pembuka atau penutup di luar modul, jangan membungkus dengan blok kode, dan jangan mengarang tautan atau rujukan. Tulis semua rumus dan ekspresi matematika dengan LaTeX: $...$ untuk inline dan $$...$$ untuk rumus yang berdiri sendiri.";
+const user=`Susun modul ajar dengan spesifikasi berikut.
+- Jenjang/kelas/fase: ${d.jenjang} / ${d.kelas} / Fase ${d.fase}
+- Mata pelajaran: ${d.mapel}
+- Materi: ${d.topik}
+- Kurikulum: ${d.kur}
+- Model pembelajaran: ${d.model}. Sintaks yang harus tampak jelas pada kegiatan inti: ${SYN[d.model].join("; ")}
+- Alokasi waktu: ${d.pert} pertemuan, masing-masing ${d.dur} menit. Kegiatan harus dibagi per pertemuan dengan perkiraan menit.
+- Jumlah peserta didik: ${d.siswa||"tidak ditentukan"}
+- Kondisi kelas: ${d.kond||"tidak ada catatan"}
+- Dimensi profil lulusan yang diutamakan: ${d.profil.join(", ")||"bebas"}
+- Penyusun/satuan pendidikan: ${d.guru||"-"} / ${d.sek||"-"}
+- Tingkat detail: ${d.detail}
+- Catatan tambahan: ${d.cat||"tidak ada"}
+Mulai dengan tabel identitas modul, lalu sertakan bagian berikut secara berurutan: ${d.komp.map(k=>names[k]).join("; ")}.
+Pastikan tujuan pembelajaran terukur (kata kerja operasional), kegiatan sesuai usia dan fase, serta asesmen selaras dengan tujuan.`;
+return{sys,user}}
+
+/* ---------- Template tanpa AI ---------- */
+function tpl(d){
+const h=k=>d.komp.includes(k),sy=SYN[d.model],o=[];
+o.push(`# Modul Ajar ${d.mapel}: ${d.topik}`,"","| Komponen | Keterangan |","|---|---|",`| Penyusun | ${d.guru||"-"} |`,`| Satuan pendidikan | ${d.sek||"-"} |`,`| Jenjang / kelas / fase | ${d.jenjang} / ${d.kelas} / ${d.fase} |`,`| Kurikulum | ${d.kur} |`,`| Model pembelajaran | ${d.model} |`,`| Alokasi waktu | ${d.pert} pertemuan x ${d.dur} menit |`,`| Jumlah peserta didik | ${d.siswa||"-"} |`,"");
+if(d.profil.length)o.push("## Dimensi profil lulusan",...d.profil.map(p=>"- "+p),"");
+if(d.kond)o.push("## Karakteristik peserta didik",d.kond,"");
+if(h("tp"))o.push("## Tujuan pembelajaran","- Peserta didik mampu menjelaskan konsep utama "+d.topik+" dengan bahasa sendiri.","- Peserta didik mampu menerapkan "+d.topik+" untuk menyelesaikan masalah kontekstual.","- Peserta didik mampu mengevaluasi dan merefleksikan hasil kerja kelompok.","");
+if(h("pb"))o.push("## Pemahaman bermakna dan pertanyaan pemantik","- Mengapa "+d.topik+" penting dalam kehidupan sehari-hari?","- Bagaimana kita dapat memanfaatkan "+d.topik+" untuk menyelesaikan masalah di sekitar kita?","");
+if(h("kk")){o.push("## Kegiatan pembelajaran","");const per=Math.ceil(sy.length/d.pert);for(let i=0;i<d.pert;i++){const st=sy.slice(i*per,(i+1)*per);o.push(`### Pertemuan ${i+1}`,"**Pendahuluan (10 menit)**","- Salam, doa, dan presensi.","- Apersepsi dan pertanyaan pemantik.","- Penyampaian tujuan dan alur kegiatan.","","**Kegiatan inti**",...(st.length?st.map((s,j)=>`${j+1}. ${s}`):["1. Penguatan konsep dan latihan lanjutan."]),"","**Penutup (10 menit)**","- Kesimpulan bersama dan refleksi singkat.","- Penugasan dan informasi pertemuan berikutnya.","")}}
+if(h("asd"))o.push("## Asesmen diagnostik","- Pertanyaan lisan atau kuis singkat untuk memetakan pengetahuan awal tentang "+d.topik+".","");
+if(h("asf"))o.push("## Asesmen formatif","- Observasi diskusi, pertanyaan pemantik, dan umpan balik pada LKPD.","");
+if(h("ass"))o.push("## Asesmen sumatif","- Tes tertulis atau produk akhir yang selaras dengan tujuan pembelajaran.","");
+if(h("dif"))o.push("## Diferensiasi pembelajaran","- **Konten:** materi dengan tingkat kesulitan bertahap.","- **Proses:** pengelompokan sesuai kesiapan atau minat.","- **Produk:** pilihan bentuk hasil (poster, presentasi, laporan).","");
+if(h("med"))o.push("## Media, alat, dan sumber belajar","- Buku teks, papan tulis, lembar kerja, dan media konkret yang tersedia.","");
+if(h("rub"))o.push("## Rubrik penilaian","| Kriteria | Sangat baik (4) | Baik (3) | Cukup (2) | Perlu bimbingan (1) |","|---|---|---|---|---|","| Pemahaman konsep | | | | |","| Penerapan | | | | |","| Kolaborasi | | | | |","");
+if(h("ref"))o.push("## Refleksi","- **Guru:** bagian mana yang berjalan baik dan perlu diperbaiki?","- **Peserta didik:** apa yang sudah dipahami dan apa yang masih membingungkan?","");
+if(h("lkpd"))o.push("## LKPD","Nama/kelompok: ........  Tanggal: ........","1. Tuliskan masalah yang diberikan.","2. Tuliskan langkah penyelesaian.","3. Tuliskan kesimpulan kelompok.","");
+if(h("pr"))o.push("## Pengayaan dan remedial","- **Pengayaan:** soal tantangan dan proyek mini.","- **Remedial:** pembelajaran ulang dengan contoh konkret dan latihan bertahap.","");
+if(h("bm"))o.push("## Ringkasan materi untuk guru","- (Isi ringkasan materi di sini.)","");
+if(h("sol"))o.push("## Contoh soal dan kunci jawaban","- (Isi contoh soal di sini.)","");
+o.push("---","*Dibuat dengan mode template tanpa AI. Pilih mesin AI agar isi lebih spesifik pada materi dan kondisi kelas.*");
+return o.join("\n")}
+
+/* ---------- Panggilan API ---------- */
+async function ask(id,sys,user){
+const key=$("#k_"+id).value.trim(),model=$("#m_"+id).value.trim();
+if(!key)throw new Error("Kunci API belum diisi.");
+let r,j;
+if(id==="gemini"){
+r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({systemInstruction:{parts:[{text:sys}]},contents:[{role:"user",parts:[{text:user}]}]})});
+j=await r.json();if(!r.ok)throw new Error(j.error?.message||"Kesalahan "+r.status);
+return(j.candidates?.[0]?.content?.parts||[]).map(p=>p.text||"").join("")}
+if(id==="claude"){
+r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model,max_tokens:8000,system:sys,messages:[{role:"user",content:user}]})});
+j=await r.json();if(!r.ok)throw new Error(j.error?.message||"Kesalahan "+r.status);
+return j.content.map(b=>b.text||"").join("")}
+const url=id==="openai"?"https://api.openai.com/v1/chat/completions":"https://openrouter.ai/api/v1/chat/completions";
+r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},body:JSON.stringify({model,messages:[{role:"system",content:sys},{role:"user",content:user}]})});
+j=await r.json();if(!r.ok)throw new Error(j.error?.message||"Kesalahan "+r.status);
+return j.choices?.[0]?.message?.content||""}
+
+/* ---------- Markdown ke HTML ---------- */
+function md2h(s,plain){
+s=s.replace(/\r/g,"").replace(/^\s*```(?:markdown|md)?\n/,"").replace(/\n```\s*$/,"");
+const M=[],hold=(t,d)=>{M.push([t.trim(),d]);return"\u0002"+(M.length-1)+"\u0003"};
+s=s.replace(/\$\$([\s\S]+?)\$\$/g,(a,t)=>hold(t,1)).replace(/\\\[([\s\S]+?)\\\]/g,(a,t)=>hold(t,1)).replace(/\\\(([\s\S]+?)\\\)/g,(a,t)=>hold(t,0)).replace(/\$(?!\s)([^$\n]+?)(?<!\s)\$/g,(a,t)=>hold(t,0));
+const inl=t=>t.replace(/<br\s*\/?>/gi,"\u0001").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/(^|[\s(])\*(?!\s)(.+?)\*/g,"$1<i>$2</i>").replace(/`(.+?)`/g,"<code>$1</code>").replace(/\u0001/g,"<br>");
+const cells=r=>r.trim().replace(/^\||\|$/g,"").split("|").map(c=>c.trim());
+const L=s.split("\n");let o="",i=0;
+while(i<L.length){const l=L[i];
+if(/^\s*\|/.test(l)&&/^\s*\|?\s*:?-{2,}/.test(L[i+1]||"")){
+o+="<table><thead><tr>"+cells(l).map(c=>`<th>${inl(c)}</th>`).join("")+"</tr></thead><tbody>";i+=2;
+while(i<L.length&&/^\s*\|/.test(L[i])){o+="<tr>"+cells(L[i]).map(c=>`<td>${inl(c)}</td>`).join("")+"</tr>";i++}
+o+="</tbody></table>";continue}
+let m;
+if(m=l.match(/^(#{1,4})\s+(.*)/)){o+=`<h${m[1].length}>${inl(m[2])}</h${m[1].length}>`;i++;continue}
+if(/^\s*([-*_])\1{2,}\s*$/.test(l)){o+="<hr>";i++;continue}
+if(/^\s*([-*]|\d+[.)])\s+/.test(l)){const ord=/^\s*\d/.test(l);o+=ord?"<ol>":"<ul>";
+while(i<L.length&&/^\s*([-*]|\d+[.)])\s+/.test(L[i])){o+=`<li>${inl(L[i].replace(/^\s*([-*]|\d+[.)])\s+/,""))}</li>`;i++}
+o+=ord?"</ol>":"</ul>";continue}
+if(!l.trim()){i++;continue}
+o+=`<p>${inl(l)}</p>`;i++}
+return o.replace(/\u0002(\d+)\u0003/g,(a,n)=>{const[t,d]=M[n];if(plain)return esc(tex2txt(t));if(!window.katex)return`<code>${esc(t)}</code>`;try{return katex.renderToString(t,{displayMode:!!d,throwOnError:false})}catch(e){return`<code>${esc(t)}</code>`}})}
+function tex2txt(t){let s=t.replace(/\^2/g,"\u00b2").replace(/\^3/g,"\u00b3");
+for(let i=0;i<3;i++)s=s.replace(/\\(?:text|mathrm|textbf|mathbf)\s*\{([^{}]*)\}/g,"$1");
+s=s.replace(/\\left|\\right/g,"");
+for(let i=0;i<4;i++)s=s.replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,"($1)/($2)").replace(/\\sqrt\s*\{([^{}]*)\}/g,"\u221a($1)");
+const m={times:"\u00d7",cdot:"\u00b7",div:"\u00f7",pm:"\u00b1",leq:"\u2264",geq:"\u2265",le:"\u2264",ge:"\u2265",neq:"\u2260",ne:"\u2260",approx:"\u2248",pi:"\u03c0",theta:"\u03b8",alpha:"\u03b1",beta:"\u03b2",infty:"\u221e",rightarrow:"\u2192",to:"\u2192",circ:"\u00b0",ldots:"\u2026",dots:"\u2026"};
+return s.replace(/\\([a-zA-Z]+)/g,(a,b)=>m[b]??b).replace(/\^\{([^{}]*)\}/g,"^($1)").replace(/_\{([^{}]*)\}/g,"_($1)").replace(/[{}]/g,"").replace(/\\[,; ]/g," ").trim()}
+
+/* ---------- Hasil, tab, ekspor ---------- */
+let R={},act=null,editing=false;
+const esc=t=>t.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const label=id=>id==="tpl"?"Template":PROV[id].n.split(" (")[0];
+function draw(){
+$("#tabs").innerHTML=Object.keys(R).map(id=>`<button role="tab" aria-selected="${id===act}" data-id="${id}">${label(id)}<span class="st">${{load:"memproses…",ok:"selesai",err:"gagal"}[R[id].st]}</span></button>`).join("");
+$$("#tabs button").forEach(b=>b.onclick=()=>{act=b.dataset.id;editing=false;draw()});
+const r=R[act];if(!r)return;
+$("#bar").innerHTML=r.st==="ok"?`<button id="b_ed">${editing?"Lihat hasil":"Edit teks"}</button><button id="b_cp">Salin</button><button id="b_md">Unduh .md</button><button id="b_doc">Unduh Word</button><button id="b_pr">Cetak / PDF</button>`:"";
+if(r.st==="load")$("#out").innerHTML='<p class="empty">Model sedang menyusun modul ajar…</p>';
+else if(r.st==="err")$("#out").innerHTML=`<p class="err"><b>Gagal.</b> ${esc(r.msg)}</p><p class="empty">Periksa kunci API, nama model, dan koneksi. Jika file ini dibuka dari situs lain dan muncul "Failed to fetch", simpan file lalu buka langsung di browser.</p>`;
+else if(editing){$("#out").innerHTML='<textarea id="ed"></textarea>';$("#ed").value=r.md;$("#ed").oninput=e=>{r.md=e.target.value}}
+else $("#out").innerHTML=md2h(r.md);
+if(r.st==="ok"){$("#b_ed").onclick=()=>{editing=!editing;draw()};$("#b_cp").onclick=async()=>{try{await navigator.clipboard.writeText(r.md);$("#b_cp").textContent="Tersalin"}catch(e){$("#b_cp").textContent="Gagal menyalin"}};
+$("#b_md").onclick=()=>dl(r.md,"text/markdown","md");$("#b_doc").onclick=()=>dl(`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font-family:Calibri,sans-serif;font-size:11pt}table{border-collapse:collapse;width:100%}td,th{border:1px solid #444;padding:4px}th{background:#eee}</style></head><body>${md2h(r.md,true)}</body></html>`,"application/msword","doc");$("#b_pr").onclick=()=>{if(editing){editing=false;draw()}window.print()}}}
+function dl(txt,type,ext){const d=data(),a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+txt],{type:type+";charset=utf-8"}));a.download=("modul-ajar-"+(d.mapel+"-"+d.topik).toLowerCase().replace(/[^a-z0-9]+/g,"-")).slice(0,70)+"."+ext;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+
+$("#go").onclick=async()=>{
+const d=data(),ids=$$("[name=eng]:checked").map(x=>x.value);
+if(!d.mapel||!d.topik){alert("Isi mata pelajaran dan materi terlebih dahulu.");return}
+if(!ids.length){alert("Pilih minimal satu mesin AI.");return}
+if(!d.komp.length){alert("Pilih minimal satu komponen modul.");return}
+try{if($("#rem").checked){const s={};for(const id in PROV)s[id]={k:$("#k_"+id).value,m:$("#m_"+id).value};localStorage.setItem("mag",JSON.stringify(s))}else localStorage.removeItem("mag")}catch(e){}
+R={};ids.forEach(id=>R[id]={st:"load"});act=ids[0];editing=false;draw();
+$("#go").disabled=true;$("#res").scrollIntoView({behavior:"smooth",block:"start"});
+const p=buildPrompt(d);
+await Promise.all(ids.map(async id=>{
+try{const md=id==="tpl"?tpl(d):await ask(id,p.sys,p.user);if(!md.trim())throw new Error("Model mengembalikan jawaban kosong.");R[id]={st:"ok",md}}
+catch(e){R[id]={st:"err",msg:/fetch/i.test(e.message)?"Tidak dapat terhubung ke "+label(id)+" ("+e.message+").":e.message}}
+draw()}));
+$("#go").disabled=false};
+</script>
+</body>
+</html>
